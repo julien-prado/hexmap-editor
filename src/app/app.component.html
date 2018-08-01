@@ -1,11 +1,14 @@
-<br>
-  <section>
-      <ko-stage #stage [config]="configStage">
-          <ko-layer #layer>
-              <ko-regular-polygon *ngFor="let item of list" [config]="item">
-              </ko-regular-polygon>
-          </ko-layer>
-          <ko-layer #dragLayer></ko-layer>
-      </ko-stage>
-      <br>
-  </section>
+<section>
+  <div>
+    <input placeholder="depth" type="number" [(ngModel)]="depth" step="1" min="0"  (change)="generateMap()" />
+    <input placeholder="width" type="number" [(ngModel)]="width" min="10" step="10" (change)="generateMap()"/>
+    <input placeholder="height" type="number" [(ngModel)]="height" min="10" step="10" (change)="generateMap()"/>
+    <input placeholder="noiseImpact" type="number" [(ngModel)]="noiseImpact" min="0" step="0.01" (change)="generateMap()"/>
+    <input placeholder="seed" type="number" [(ngModel)]="seed" (change)="generateMap()"/>
+    <select [(ngModel)]="selectedProfile">
+      <option *ngFor="let p of profiles" [ngValue]="p">{{p.name}}</option>
+    </select>
+    <input type="submit" (click)="generateMap()" />
+  </div>
+  <app-stage></app-stage>
+</section>

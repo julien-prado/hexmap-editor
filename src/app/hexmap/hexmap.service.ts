@@ -4,25 +4,26 @@ import { of } from 'rxjs/observable/of';
 import { HexMap } from './hexmap';
 import { Hexagon } from './hexagon';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { Generator, Options } from 'hexmap-lib';
 
 @Injectable()
 export class HexMapService {
-
-  private _map: HexMap = new HexMap();
-  private _ObsHexMap = new BehaviorSubject<HexMap>(this._map);
-  private _Generator = new Generator({ seed: 30, patchSize: 20 });
+  private _ObsHexMap = new Subject<HexMap>();
 
   constructor() { }
 
-  getMap(): BehaviorSubject<HexMap> {
-    return this._ObsHexMap;
+  getMap(): Observable<HexMap> {
+    return this._ObsHexMap.asObservable();
   }
 
-  generate() {
-    this._map.hexes = this._Generator.generate().reduce(function (accu, curr) {
+  generate(opt: Options) {
+    const map = new HexMap();
+    const generator = new Generator(opt);
+    map.hexes = generator.generate().reduce(function (accu, curr) {
       accu.push(new Hexagon(curr));
       return accu;
     }, []);
+    this._ObsHexMap.next(map);
   }
 }
